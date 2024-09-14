@@ -15,7 +15,7 @@ function BOOT() {
 }
 
 var t = 0
-var x = 96
+var x = 0
 var y = 24
 
 function TIC() {
@@ -25,7 +25,9 @@ function TIC() {
     if (btn(3)) x++
 
     cls(0)
-    spr(1 + ((t % 60) / 30 | 0) * 2, x, y, 14, 3, 0, 0, 2, 2)
+    // spr(1 + ((t % 60) / 30 | 0) * 2, x, y, 14, 3, 0, 0, 2, 2)
+    spr(513, 40 + 9 * 8, 40 + 8 * 3);
     print("HELLO WORLD!", 84, 84,2)
     t++
+    map(30 + x, 0, 20, 17, 40)
 }
