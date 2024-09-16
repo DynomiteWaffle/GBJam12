@@ -1,4 +1,4 @@
-// title:   GB Jam 12
+// title:   Hell's Asteroid
 // author:  DynomiteWaffle
 // desc:   	made for GB Jam 12
 // site:    dynomitewaffle.github.io
@@ -46,15 +46,23 @@ function boot_animation() {
     // poke4(0x3FF0*2)
     // logos
     map(220, 119, 20, 17, 40)
-    if (time() > 3000) {    
-        scene = game_scene
+    if (time() > 1500) {    
+        scene = menu_scene
         // vbank(0)
         sync(32, 0, false)// set to game colors
     }
 }
 function menu_scene() {
-    // start timer/game
-    start_time = time()
+    spr(16,40+16,0,-1,1,0,0,16,16)
+    map(205, 119, 20, 17, 40)
+
+    if (btn(4)) {
+        // start timer/game
+        start_time = time()
+
+        scene = game_scene
+        
+    }
 }
 function game_scene() {
     //d right
