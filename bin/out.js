@@ -25,12 +25,26 @@ var left_last_pressed = time();
 var right_last_pressed = time();
 var up_last_pressed = time();
 var down_last_pressed = time();
+var facing_dir = 0;
 var d_last_pressed = time();
 var last_pressed = time();
 const player_left_limit = x - 3;
 var player_right_limit = x + 21;
 var start_time = 0;
 var end_time = 0;
+var repairs = [];
+repairs[63] = false;
+repairs[68] = false;
+repairs[73] = false;
+repairs[78] = false;
+repairs[83] = false;
+repairs[88] = false;
+repairs[93] = false;
+repairs[98] = false;
+repairs[103] = false;
+repairs[108] = false;
+var tunnel = 60;
+var show_nuke = false;
 const button_time = 150;
 function boot_animation() {
     // poke4(0x3FF0*2)
@@ -59,6 +73,7 @@ function game_scene() {
             x--;
         }
         d_last_pressed = time();
+        facing_dir = 0;
     }
     //d left
     if (btn(2) && time() > d_last_pressed + button_time) {
@@ -67,6 +82,7 @@ function game_scene() {
             x++;
         }
         d_last_pressed = time();
+        facing_dir = 1;
     }
     // down - action
     if (btn(4) && time() > last_pressed + button_time) {
@@ -76,8 +92,8 @@ function game_scene() {
     if (btn(5) && time() > last_pressed + button_time) {
         last_pressed = time();
     }
-    map(x, 0, 20, 17, 40);
-    spr(513, 40 + 9 * 8, 40 + 8 * 3);
+    map(x, 0, 20, 17, 40, null, null, 1, remap);
+    spr(513, 40 + 9 * 8, 40 + 8 * 3, null, 1, facing_dir);
 }
 function nuke_scene() { }
 // cinematic
@@ -100,6 +116,35 @@ function TIC() {
     // map(x, 0, 20, 17, 40)
     cls(0);
     scene();
+}
+function remap(tile, x, y) {
+    // change tiles
+    if (tile == 1) {
+        // nuke
+        if (show_nuke) {
+            return 32;
+        }
+        return 0;
+    }
+    if (tile == 2) {
+        // tunnel
+        if (x == tunnel) {
+            return 16;
+        }
+        return 0;
+    }
+    if (tile == 18) {
+        // repair
+        if (repairs[x]) {
+            return 32;
+        }
+        return 0;
+    }
+    if (tile == 3) {
+        // leave
+        return 48;
+    }
+    return tile;
 }
 function sleep(milliseconds) {
     const now = time();
