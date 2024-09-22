@@ -45,18 +45,26 @@ var start_time = 0
 var end_time = 0
 
 var repairs = []
-repairs[63] = false
-repairs[68] = false
-repairs[73] = false
-repairs[78] = false
-repairs[83] = false
-repairs[88] = false
-repairs[93] = false
-repairs[98] = false
-repairs[103] = false
-repairs[108] = false
+repairs[63] = 0
+repairs[68] = 0
+repairs[73] = 0
+repairs[78] = 0
+repairs[83] = 0
+repairs[88] = 0
+repairs[93] = 0
+repairs[98] = 0
+repairs[103] = 0
+repairs[108] = 0
 var tunnel = 60
 var show_nuke = false
+
+type button = null|0|1|2|3|4|5|6|7|8
+
+const tunnel_max_combo = 4
+
+var tunnel_combo = 0
+
+var random_button: button
 
 const button_time = 150
 
@@ -83,6 +91,8 @@ function menu_scene() {
     }
 }
 function game_scene() {
+    if (random_button == null) {fill_button_pattern(true)}
+    trace(random_button)
     //d right
     if (btn(3) && time() > d_last_pressed + button_time){
         x++
@@ -104,11 +114,13 @@ function game_scene() {
     // down - action
     if (btn(4) && time() > last_pressed + button_time) {
         last_pressed = time()
+        random_button = null
     }
     // right - exit
     if (btn(5) && time() > last_pressed + button_time) {
         last_pressed = time()
     }
+    // tunnel combo completeion - use mset
     map(x, 0, 20, 17, 40,null,null,1,remap)
     spr(513, 40 + 9 * 8, 40 + 8 * 3,null,1,facing_dir);
 }
@@ -140,6 +152,16 @@ function TIC() {
     scene()
 }
 
+function fill_button_pattern(only_dpad:boolean) {
+    if (only_dpad) {
+        random_button = Math.floor(Math.random()*4) as button// 4 is d pad only 8 is all
+        return
+    }
+    // fill with all buttons
+    random_button = Math.floor(Math.random() * 8) as button// 8 is all
+    return
+}
+
 function remap(tile: number, x: number, y: number) {
     // change tiles
     if (tile == 1) {
@@ -158,7 +180,7 @@ function remap(tile: number, x: number, y: number) {
     }
     if (tile == 18) {
         // repair
-        if (repairs[x]) {
+        if (repairs[x] > 0) {
             return 32
         }
         return 0
