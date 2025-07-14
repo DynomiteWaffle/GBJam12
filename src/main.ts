@@ -11,6 +11,7 @@
 
 const normal_button_sequence = 4
 const repair_button_sequence = 4
+const nuke_button_sequence = 8
 const tunnel_colapse_time = 100
 const tunnel_warn_time = tunnel_colapse_time * 0.075
 
