@@ -158,7 +158,7 @@ function game_scene() {
             // TODO build tunnel
             is_button_sequence = false;
             tunnel += 5;
-            repair[tunnel - 2] = tunnel_warn_time + 1;
+            repair[tunnel - 2] = 0;
             // add tunnel front
             mset(tunnel + 1, 8 - 2, 80);
             mset(tunnel + 1, 8 - 1, 64);
