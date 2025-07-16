@@ -90,3 +90,21 @@ function sleep(milliseconds: number) {
         }
     }
 }
+function delayInputs(extraTime?: number) {
+    if (typeof extraTime == "undefined") {
+        extraTime = 0
+    }
+
+    // trace("delay inputs")
+    d_last_pressed = time()
+    d_right_last_pressed = time()
+    d_left_last_pressed = time()
+    d_up_last_pressed = time()
+    d_down_last_pressed = time()
+
+    last_pressed = time()
+    left_last_pressed = time()
+    right_last_pressed = time()
+    up_last_pressed = time()
+    down_last_pressed = time()
+}

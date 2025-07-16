@@ -6,6 +6,8 @@ var tunnel = original_tunnel_length
 var repair = []
 var is_button_sequence = false
 var button_sequence_count = 0
+var button_sequence_time = 0
+var button_sequence_time_gap = 10
 var button_next = 2
 var failed_button_sequence = false
 var nuke_active = false
@@ -38,6 +40,7 @@ function game_scene() {
     }
     // down - action
     if (!is_button_sequence && btn(4) && time() > last_pressed + button_time) {
+
         // update nodes
         // nuke
         if (cell() == 1) {
@@ -60,6 +63,9 @@ function game_scene() {
 
         last_pressed = time()
         random_button = null
+        randomize_button()
+
+
     }
     // right - exit
     if (btn(5) && time() > last_pressed + button_time) {
@@ -94,8 +100,13 @@ function game_scene() {
                 button = 36
                 break;
         }
-
-        spr(button, 40 + 9 * 8, 40 - 2 + 2 * 8, null)
+        // TODO delay this desplaying/ add a gap between showing
+        if (button_sequence_time == 0) {
+            spr(button, 40 + 9 * 8, 40 - 2 + 2 * 8, null)
+        } else {
+            spr(6, 40 + 9 * 8, 40 - 2 + 2 * 8, null)
+            button_sequence_time--
+        }
         // button_sequence_count = 0
         // trace(button_sequence_count)
         if (btnp() != 0) {
@@ -109,30 +120,16 @@ function game_scene() {
         // correct button check
         if (!btn(4) && !btn(5) && !btn(6) && !btn(7) && btn() != 0) {
             if (!btnp(4) && !btnp(5) && !btnp(6) && !btnp(7) && btnp() != 0) {
-
                 if (btn() != button_next) {
                     trace("failed")
                     trace(btn())
                     failed_button_sequence = true
                     is_button_sequence = false
+                    delayInputs()
                 } else {
+                    button_sequence_time = button_sequence_time_gap
                     button_sequence_count--
-
-                    // rand next button == 1 2 4 8
-                    switch (Math.floor((Math.random() * 4) + 1)) {
-                        case 1:
-                            button_next = 1
-                            break;
-                        case 2:
-                            button_next = 2
-                            break;
-                        case 3:
-                            button_next = 4
-                            break;
-                        case 4:
-                            button_next = 8
-                            break;
-                    }
+                    randomize_button()
                 }
             }
         }
@@ -164,6 +161,7 @@ function game_scene() {
             mset(tunnel + 1, 8, 64)
             mset(tunnel + 1, 8 + 1, 64)
             mset(tunnel + 1, 8 + 2, 96)
+            delayInputs()
 
 
             // repair tunnel
@@ -171,11 +169,13 @@ function game_scene() {
             trace("repair")
             repair[x + 9] = 0
             is_button_sequence = false
+            delayInputs()
         } else if (button_sequence_count <= 0 && cell() == 1) {
             is_button_sequence = false
             trace("nuke placed")
             nuke_active = true
             mset(x + 9, 8, 33)//set active nuke
+            delayInputs()
         }
     }
 
@@ -245,4 +245,21 @@ function cell() {
 
 function leave() {
     // TODO change scene appropeutly
+}
+
+function randomize_button() {
+    switch (Math.floor((Math.random() * 4) + 1)) {
+        case 1:
+            button_next = 1
+            break;
+        case 2:
+            button_next = 2
+            break;
+        case 3:
+            button_next = 4
+            break;
+        case 4:
+            button_next = 8
+            break;
+    }
 }
